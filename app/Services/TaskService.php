@@ -15,6 +15,15 @@ class TaskService
         $this->model = Task::class;
     }
 
+    /**
+     * Retrieve a paginated list of tasks based on given conditions and scopes.
+     *
+     * @param int $pagination_num The number of items per page for pagination.
+     * @param array $conditions An associative array of conditions to filter the query.
+     * @param array $scopes An array of model scopes to apply to the query.
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator The paginated result set.
+     */
+
     public function limit(int $pagination_num = 10, array $conditions = [], array $scopes = [])
     {
         $query = $this->model::query();

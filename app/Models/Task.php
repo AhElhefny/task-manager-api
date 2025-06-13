@@ -26,6 +26,12 @@ class Task extends Model
         'priority' => TaskPriorityEnum::class,
     ];
 
+    /**
+     * Scope a query to only include tasks of a given status.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeStatus($query)
     {
         if (!request()->has('status') || !in_array(request('status'), array_column(TaskStatusEnum::cases(), 'value'))) {
@@ -34,6 +40,12 @@ class Task extends Model
         return $query->where('status', request('status'));
     }
 
+    /**
+     * Scope a query to only include tasks due within a given date range.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeDueDateRange($query)
     {
         if (request('start_date') && request('end_date')) {

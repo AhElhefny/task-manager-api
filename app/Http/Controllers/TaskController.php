@@ -16,8 +16,16 @@ class TaskController extends Controller
     use HelperTrait;
 
     public function __construct(protected TaskService $taskService) {}
+
     /**
-     * Display a listing of the resource.
+     * Get all tasks with sorting and filtering.
+     *
+     * @queryParam status string One of: pending, in_progress, completed, overdue. Example: pending
+     * @queryParam due_date_range string Date range in the format of "YYYY-MM-DD,YYYY-MM-DD". Example: 2023-03-01,2023-03-31
+     * @queryParam text_search string Search query. Example: task
+     * @queryParam sorting string One of: priority, due_date, created_at. Example: priority
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
@@ -29,9 +37,14 @@ class TaskController extends Controller
         );
     }
 
+
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created task in storage.
+     *
+     * @param  \App\Http\Requests\StoreTaskRequest  $request
+     * @return \Illuminate\Http\Response
      */
+
     public function store(StoreTaskRequest $request)
     {
         $task = $this->taskService->create(data: $request->validated());
@@ -42,8 +55,13 @@ class TaskController extends Controller
         );
     }
 
+
     /**
-     * update an old created resource in storage.
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Models\Task  $task
+     * @param  \App\Http\Requests\StoreTaskRequest  $request
+     * @return \Illuminate\Http\Response
      */
     public function update(Task $task, StoreTaskRequest $request)
     {
@@ -55,6 +73,13 @@ class TaskController extends Controller
         );
     }
 
+    /**
+     * Display the specified task.
+     *
+     * @param \App\Models\Task $task The task instance to be displayed.
+     * @return \Illuminate\Http\Response The response containing the task data.
+     */
+
     public function show(Task $task)
     {
         return $this->apiResponse(
@@ -64,8 +89,12 @@ class TaskController extends Controller
         );
     }
 
+
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified task from storage.
+     *
+     * @param \App\Models\Task $task The task instance to be deleted.
+     * @return \Illuminate\Http\Response The response containing the task deletion status.
      */
     public function destroy(Task $task)
     {
@@ -76,6 +105,14 @@ class TaskController extends Controller
         );
     }
 
+    /**
+     * Update the status of a task.
+     *
+     * @param \App\Models\Task $task The task instance to be updated.
+     * @param \App\Http\Requests\UpdateTaskStatusRequest $request The request instance containing the new task status.
+     *
+     * @return \Illuminate\Http\Response The response containing the task with the updated status.
+     */
     public function updateStatus(Task $task, UpdateTaskStatusRequest $request)
     {
         $task = $this->taskService->edit($task, $request->validated());
