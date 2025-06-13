@@ -6,6 +6,15 @@ use Illuminate\Http\Response;
 
 trait HelperTrait
 {
+    /**
+     * Given an enum, returns an associative array with three keys:
+     * - 'value': the value of the enum
+     * - 'slug': the name of the enum
+     * - 'label': the label of the enum, or its name if no label is set
+     *
+     * @param \BackedEnum $enum
+     * @return array
+     */
     public function getEnumInfo($enum): array
     {
         return [
@@ -34,6 +43,15 @@ trait HelperTrait
         return $data instanceof \Illuminate\Http\Resources\Json\AnonymousResourceCollection ? $data->collection->isEmpty() : empty($data);
     }
 
+    /**
+     * Checks if the status of a model is allowed to transition to a new status.
+     *
+     * @param mixed $model The model to check.
+     * @param int|string $newStatus The new status to transition to.
+     * @param int|array $oldStatus The old status or statuses to check against.
+     *
+     * @return string|array If the transition is valid, returns an array with 'key' as 'success' and 'msg' as 'Status transition is valid.'. If the transition is invalid, returns an array with 'key' as 'fail' and 'msg' with the reason for the failure. If the model is not found, returns the string 'model not found'.
+     */
     static function checkPreviousStatus($model, $newStatus, int|array $oldStatus): string|array
     {
         try {
