@@ -26,6 +26,12 @@ return new class extends Migration
             $table->softDeletes();
             $table->timestamps();
 
+            // create indexes for columns that will be frequently queried to speed up sorting/filtering
+            $table->index('status');
+            $table->index('priority');
+            $table->index('due_date');
+
+            // create full-text index for title and description
             $table->fullText(['title', 'description']);
         });
     }
