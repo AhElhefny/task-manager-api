@@ -4,4 +4,4 @@ use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
 Route::apiResource('tasks', TaskController::class);
-Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus']);
+Route::patch('tasks/{task}/update-status', [TaskController::class, 'updateStatus']);

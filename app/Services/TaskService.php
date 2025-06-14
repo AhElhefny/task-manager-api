@@ -27,7 +27,7 @@ class TaskService
     public function limit(int $pagination_num = 10, array $conditions = [], array $scopes = [])
     {
         $query = $this->model::query();
-        $query->when(!empty($conditions), function ($query) use ($conditions) {
+        return $query->when(!empty($conditions), function ($query) use ($conditions) {
             $query->where($conditions);
         })
             ->when(!empty($scopes), function ($query) use ($scopes) {
@@ -38,12 +38,12 @@ class TaskService
                 }
             })
             ->paginate($pagination_num);
-        return $query;
     }
 
     public function create($data)
     {
-        return $this->model::create($data);
+        $task = $this->model::create($data);
+        return $task->refresh();
     }
 
     public function edit($model, $data)

@@ -19,7 +19,7 @@ trait HelperTrait
     {
         return [
             'value' => $enum->value,
-            'slug' => $enum->name,
+            'slug'  => $enum->name,
             'label' => $enum->label ?? $enum->name,
         ];
     }
@@ -39,7 +39,6 @@ trait HelperTrait
     }
     protected function checkIfEmpty($data): bool
     {
-
         return $data instanceof \Illuminate\Http\Resources\Json\AnonymousResourceCollection ? $data->collection->isEmpty() : empty($data);
     }
 
