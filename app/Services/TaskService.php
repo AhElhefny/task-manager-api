@@ -40,6 +40,23 @@ class TaskService
             ->paginate($pagination_num);
     }
 
+    public function get($conditions = [], $scopes = [])
+    {
+        $query = $this->model::query();
+        return $query
+        ->when(!empty($conditions), function ($query) use ($conditions) {
+            $query->where($conditions);
+        })
+        ->when(!empty($scopes), function ($query) use ($scopes) {
+            foreach ($scopes as $scope) {
+                if (method_exists($this->model, 'scope' . ucfirst($scope))) {
+                    $query->$scope();
+                }
+            }
+        })
+        ->get();
+    }
+
     public function create($data)
     {
         $task = $this->model::create($data);
