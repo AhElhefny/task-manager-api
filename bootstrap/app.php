@@ -111,11 +111,11 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        $exceptions->render(function (Exception $exception, Request $request) {
+        $exceptions->render(function (Throwable $exception, Request $request) {
             if ($request->is('api/*')) {
                 return responseJson(
                     msg: $exception->getMessage(),
-                    code: Response::HTTP_INTERNAL_SERVER_ERROR,
+                    code: Response::HTTP_UNPROCESSABLE_ENTITY,
                     error: true,
                     errors: ['line' => $exception->getLine(), 'file' => $exception->getFile()]
                 );
