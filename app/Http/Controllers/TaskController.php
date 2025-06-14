@@ -29,12 +29,12 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = $this->taskService->limit(scopes: ['status', 'dueDateRange','textSearch','sorting']);
-        return $this->apiResponse(
-            msg: 'Tasks retrieved successfully',
-            data: TaskResource::collection($tasks),
-            code: Response::HTTP_OK
-        );
+        $tasks = $this->taskService->limit(scopes: ['status', 'dueDateRange', 'textSearch', 'sorting']);
+        return TaskResource::collection($tasks)
+            ->additional([
+                'message' => 'Tasks retrieved successfully',
+                'status' => Response::HTTP_OK,
+            ]);
     }
 
 
@@ -101,7 +101,7 @@ class TaskController extends Controller
         $this->taskService->delete($task);
         return $this->apiResponse(
             msg: 'Task deleted successfully',
-            code: Response::HTTP_NO_CONTENT
+            code: Response::HTTP_OK
         );
     }
 

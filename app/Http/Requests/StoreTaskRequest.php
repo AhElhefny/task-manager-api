@@ -19,10 +19,10 @@ class StoreTaskRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'min:5', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
-            'status' => ['required', 'numeric', Rule::in(array_column(TaskStatusEnum::cases(), 'value'))],
             'due_date' => ['required', 'date_format:Y-m-d H:i', 'after:now'],
             'priority' => ['required', 'numeric', Rule::in(array_column(TaskPriorityEnum::cases(), 'value'))],
         ];
     }
-    
+
 }
+
