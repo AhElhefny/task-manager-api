@@ -1,95 +1,103 @@
-# 🧠 Advanced Task Manager API
+# Task Manager API
 
-A Laravel 12 RESTful API for managing tasks with support for full-text search, prioritization, filtering, sorting, soft deletes, queue-based notifications, and more.
+A powerful RESTful API built with Laravel 11+ for managing tasks, supporting features like filtering, sorting, pagination, notifications, and rate limiting.
 
 ---
 
 ## 🚀 Features
 
-### ✅ Basic Features
-
-- **Task Creation**
-  - Create tasks with title, description, and due date.
-  - Validate that title is required, description is optional, and due date is a valid future date.
-  - Status Enum: `Pending`, `In Progress`, `Completed`, `Overdue`.
-
-- **Task Updates**
-  - Update task status.
-  - Prevent direct transition to `Completed` unless task is already `In Progress`.
-
-- **Task Deletion**
-  - Soft delete support to preserve task history.
-
-- **Task Listing**
-  - Filter tasks by status and due date range.
-  - Sort tasks by: `priority`, `due date`, or `creation date`.
+- Task CRUD operations (create, list, update status, soft delete)
+- Filtering by:
+  - Status (1=Pending, 2=In Progress, 3=Completed, 4=Overdue)
+  - Due date range (`start_date`, `end_date`)
+  - Text search (`title`, `description`)
+- Sorting by `created_at`, `due_date`, `priority`
+- Pagination with metadata
+- **Email notifications** sent 24 hours before task due
+- **Rate limiting** on task creation endpoint
+- Laravel Queues & Artisan Command usage
+- OpenAPI (Swagger) Documentation
 
 ---
 
-### 🧠 Advanced Features
+## 🛠 Setup Instructions
 
-- **Task Notifications**
-  - Email notification 24 hours before due date.
-  - Artisan command scheduled to run hourly.
-  - Powered by Laravel Queues.
-
-- **Task Search**
-  - Full-text search on `title` and `description` using MySQL’s `MATCH...AGAINST`.
-
-- **Task Prioritization**
-  - Enum-based priority system: `Low`, `Medium`, `High`.
-  - Supports sorting by priority.
-
----
-
-### 🧪 Code Quality
-
-- ✅ Follows **SOLID principles**.
-- ✅ Uses **Service Layer**, **Form Requests**, **Custom Resources**, and **Traits**.
-- ✅ Organized by feature with clear folder structure.
-- ✅ Factory and Seeder support for test data.
-- ✅ Unit and Feature tests planned.
-
----
-
-### 🎁 Bonus Features
-
-- 🔐 Rate Limiting (Optional) to prevent abuse.
-- 📦 API Resource Responses for clean output.
-- 🧾 API Documentation ready to be extended via Swagger / Laravel OpenAPI.
-
----
-
-## ⚙️ Setup Instructions
-
-### 1. Clone the repository
+1. Clone the repository:
 
 ```bash
 git clone https://github.com/AhElhefny/task-manager-api.git
 cd task-manager-api
-2. Install dependencies
 
-composer install
-cp .env.example .env
-php artisan key:generate
-3. Configure the .env file
-Set your database connection
+Install dependencies:
+    composer install
+    cp .env.example .env
+    php artisan key:generate
 
-Configure mail settings for notifications
+Set up database in .env then run:
+    php artisan migrate --seed
 
-4. Run migrations and seeders
+Start the server:
+    php artisan serve
 
-php artisan migrate --seed
-5. (Optional) Set up Scheduler
-Add this to your server cron job (to run every minute):
+🔐 Rate Limiting
+The API limits how many tasks a user can create in a short time to prevent abuse.
 
+Configured using Laravel’s built-in ThrottleRequests middleware.
 
-* * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
-🧪 Running Tests
+Limit: 5 requests per minute on /api/tasks POST.
 
-php artisan test
-📄 License
-This project is open-sourced under the MIT license.
+Returns 429 Too Many Requests if exceeded.
 
-👨‍💻 Built with ❤️ by AhElhefny
+📬 Task Notification System
+We notify users via email 24 hours before a task’s due date.
 
+Artisan command: php artisan tasks:notify-for-coming
+
+Scheduled to run hourly via Laravel Scheduler
+
+Uses queue system to send notifications asynchronously
+
+Job Class: SendTaskReminderEmail
+
+Custom notification logic is in app/Notifications/NotifyForComingTasksNotification.php
+
+📅 Task Status & Priority Enums
+    Used consistently across validation, database, and API resources.
+
+Status Code	Meaning
+    1	Pending
+    2	In Progress
+    3	Completed
+    4	Overdue
+
+Priority Code	Meaning
+    1	Low
+    2	Medium
+    3	High
+
+📄 API Documentation
+Full Swagger documentation is available in swagger.yaml. You can visualize it using:
+
+Swagger Editor
+
+Or Postman with the OpenAPI import
+
+Also, a ready Postman Collection is available in postman/collection.json.
+
+🧠 Design Decisions
+Service Layer: Encapsulates business logic outside controllers.
+
+Request Classes: For clean validation and type safety.
+
+Enum Integration: Centralized status/priority control.
+
+Queue System: For non-blocking email delivery.
+
+Rate Limiting: Security and abuse prevention.
+
+OpenAPI: Makes the API self-documented and testable.
+
+✍️ Author
+Ahmed Ahmed Elhefny
+GitHub: AhElhefny
+Project: Task Manager API
